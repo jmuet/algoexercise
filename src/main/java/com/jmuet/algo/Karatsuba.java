@@ -38,9 +38,6 @@ public class Karatsuba {
 
         int[] adbc = GradeSchoolAdd.sub(pq, GradeSchoolAdd.add(ac, bd));
 
-        //recursively ac, bd, pq
-        //adbc = pq - ac - bd
-        //return 10^n ac + 10^n/2 adbc + bd
         return GradeSchoolAdd.add(GradeSchoolAdd.add(padRight(ac, ac.length + len), padRight(adbc, adbc.length + len /2)), bd);
     }
 

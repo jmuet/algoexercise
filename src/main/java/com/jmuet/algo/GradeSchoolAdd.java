@@ -6,12 +6,15 @@ public class GradeSchoolAdd {
         return Util.arrayToStr(add(Util.strToArray(x), Util.strToArray(y)));
     }
 
-    public static int[] add(int[] x, int[] yo) {
-        int[] res = new int[x.length];
-        int[] y = new int[x.length];
-        System.arraycopy(yo,0,y,y.length-yo.length,yo.length);
+    public static int[] add(int[] xo, int[] yo) {
+        int maxlen = xo.length > yo.length ? xo.length : yo.length;
+        int[] res = new int[maxlen];
+        int[] x = new int[maxlen];
+        int[] y = new int[maxlen];
+        System.arraycopy(xo,0,x,maxlen-xo.length,xo.length);
+        System.arraycopy(yo,0,y,maxlen-yo.length,yo.length);
         int carry = 0;
-        for (int i = x.length - 1; i >= 0; i--) {
+        for (int i = maxlen - 1; i >= 0; i--) {
             int a = x[i] + y[i] + carry;
             if (a > 10) {
                 a = a - 10;
@@ -22,7 +25,7 @@ public class GradeSchoolAdd {
             res[i] = a;
         }
         if (carry != 0) {
-            int[] res1 = new int[x.length + 1];
+            int[] res1 = new int[maxlen + 1];
             res1[0] = carry;
             System.arraycopy(res,0,res1,1,res.length);
             return res1;

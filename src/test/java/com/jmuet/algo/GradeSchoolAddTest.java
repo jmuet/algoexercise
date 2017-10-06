@@ -12,8 +12,13 @@ public class GradeSchoolAddTest {
     }
 
     @Test
-    public void adds_different_length() {
+    public void adds_different_length_1() {
         assertEquals("1145", GradeSchoolAdd.add("1070", "75"));
+    }
+
+    @Test
+    public void adds_different_length_2() {
+        assertEquals("1145", GradeSchoolAdd.add("75", "1070"));
     }
 
     @Test

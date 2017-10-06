@@ -18,6 +18,10 @@ public class Util {
     }
 
     public static int[] toArray(int i) {
+        if (i < 0)
+            throw new IllegalArgumentException("works for input >= 0");
+        if (i == 0)
+            return new int[]{0};
         int tmp = i;
         int[] res = new int[1 + (int)Math.floor(Math.log(i)/Math.log(10))];
         for (int k = res.length - 1; k >= 0; k--) {
