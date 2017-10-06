@@ -6,13 +6,14 @@ public class GradeSchoolAdd {
         return Util.arrayToStr(add(Util.strToArray(x), Util.strToArray(y)));
     }
 
-    public static int[] add(int[] xo, int[] yo) {
-        int maxlen = xo.length > yo.length ? xo.length : yo.length;
-        int[] res = new int[maxlen];
+    public static int[] add(int[] x0, int[] y0) {
+        int maxlen = x0.length > y0.length ? x0.length : y0.length;
         int[] x = new int[maxlen];
         int[] y = new int[maxlen];
-        System.arraycopy(xo,0,x,maxlen-xo.length,xo.length);
-        System.arraycopy(yo,0,y,maxlen-yo.length,yo.length);
+        System.arraycopy(x0,0,x,maxlen-x0.length,x0.length);
+        System.arraycopy(y0,0,y,maxlen-y0.length,y0.length);
+        int[] res = new int[maxlen];
+
         int carry = 0;
         for (int i = maxlen - 1; i >= 0; i--) {
             int a = x[i] + y[i] + carry;
@@ -37,10 +38,24 @@ public class GradeSchoolAdd {
         return Util.arrayToStr(sub(Util.strToArray(x), Util.strToArray(y)));
     }
 
-    public static int[] sub(int[] x, int[] yo) {
-        int[] y = new int[x.length];
-        System.arraycopy(yo,0,y,y.length-yo.length,yo.length);
-        int[] res = new int[x.length];
+    public static int[] sub(int[] x0, int[] y0) {
+        int maxlen = x0.length > y0.length ? x0.length : y0.length;
+        int[] x = new int[maxlen];
+        int[] y = new int[maxlen];
+        System.arraycopy(x0,0,x,maxlen-x0.length,x0.length);
+        System.arraycopy(y0,0,y,maxlen-y0.length,y0.length);
+        int[] res = new int[maxlen];
+
+        int signum = compare(x0, y0);
+        if (signum == 0)
+            return new int[]{0};
+        if (signum < 0) {
+            int[] tmp = new int[maxlen];
+            System.arraycopy(x,0,tmp,0,maxlen);
+            System.arraycopy(y,0,x,0,maxlen);
+            System.arraycopy(tmp,0,y,0,maxlen);
+        }
+
         boolean carry = false;
         for (int i = x.length - 1; i >= 0; i--) {
             int a = x[i] - y[i] - (carry ? 1 : 0);
@@ -52,7 +67,41 @@ public class GradeSchoolAdd {
             }
             res[i] = a;
         }
+        res = trimZeroes(res);
+        if (signum < 0)
+            res[0] = -res[0];
         return res;
+    }
+
+    private static int[] trimZeroes(int[] arr) {
+        int i = 0;
+        while (true) {
+            if (i == arr.length - 1)
+                return new int[]{0};
+            if (arr[i] != 0)
+                break;
+            i++;
+        }
+        int[] res = new int[arr.length - i];
+        System.arraycopy(arr,i,res,0,res.length);
+        return res;
+    }
+
+    public static int compare(String x, String y) {
+        return compare(Util.strToArray(x), Util.strToArray(y));
+    }
+
+    private static int compare(int[] x0, int[] y0) {
+        int maxlen = x0.length > y0.length ? x0.length : y0.length;
+        int[] x = new int[maxlen];
+        int[] y = new int[maxlen];
+        System.arraycopy(x0,0,x,maxlen-x0.length,x0.length);
+        System.arraycopy(y0,0,y,maxlen-y0.length,y0.length);
+
+        for (int i = 0 ; i < x.length; i++)
+            if (x[i] < y[i]) return -1;
+        else if (x[i] > y[i]) return 1;
+        return 0;
     }
 
 }
