@@ -42,4 +42,16 @@ public class Util {
         res[0] = res[0] * signum;
         return res;
     }
+
+    public static int getClosestPowerOfTwo(int i) {
+        int res = i;
+        while (!isPowerOfTwo(res))
+            res++;
+        return res;
+    }
+
+    private static boolean isPowerOfTwo(int n) {
+        return ((n & n - 1) == 0);
+    }
+
 }

@@ -2,7 +2,6 @@ package com.jmuet.algo;
 
 import org.junit.Test;
 
-import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
 
 public class KaratsubaTest {
@@ -13,23 +12,13 @@ public class KaratsubaTest {
     }
 
     @Test
-    public void rejects_x_input_length_not_power_of_two() {
-        try {
-            Karatsuba.multiply("123", "243");
-            fail("should have thrown exception");
-        } catch (IllegalArgumentException e) {
-            assertEquals("input length not power of 2", e.getMessage());
-        }
+    public void multiplies_by_one() {
+        assertEquals("24", Karatsuba.multiply("24", "1"));
     }
 
     @Test
-    public void rejects_input_with_differing_length() {
-        try {
-            Karatsuba.multiply("1235", "247");
-            fail("should have thrown exception");
-        } catch (IllegalArgumentException e) {
-            assertEquals("input lengths must be the same", e.getMessage());
-        }
+    public void multiplies_by_zero() {
+        assertEquals("0", Karatsuba.multiply("240", "0"));
     }
 
     @Test
@@ -38,14 +27,49 @@ public class KaratsubaTest {
     }
 
     @Test
+    public void multiplies_double_digits_2() {
+        assertEquals("150", Karatsuba.multiply("15", "10"));
+    }
+
+    @Test
+    public void multiplies_double_digits_3() {
+        assertEquals("150", Karatsuba.multiply("10", "15"));
+    }
+
+    @Test
+    public void multiplies_double_digits_4() {
+        assertEquals("580", Karatsuba.multiply("58", "10"));
+    }
+
+    @Test
     public void multiplies_quad_digits() {
         assertEquals("1048576", Karatsuba.multiply("1024", "1024"));
     }
 
     @Test
-    public void challenge() {
-        assertEquals("1", Karatsuba.multiply("3141592653589793238462643383279502884197169399375105820974944592",
-                "2718281828459045235360287471352662497757247093699959574966967627"));
+    public void multiplies_quad_digits_2() {
+        assertEquals("1048000", Karatsuba.multiply("1048", "1000"));
     }
+
+    @Test
+    public void multiplies_8_digits() {
+        assertEquals("563767409744880", Karatsuba.multiply("12349898", "45649560"));
+    }
+
+    @Test
+    public void multiplies_8_digits_2() {
+        assertEquals("123498980000000", Karatsuba.multiply("12349898", "10000000"));
+    }
+
+    @Test
+    public void multiplies_8_digits_3() {
+        assertEquals("400000000000000", Karatsuba.multiply("20000000", "20000000"));
+    }
+
+//    @Test
+//    public void challenge() {
+//        assertEquals("1", Karatsuba.multiply("3141592653589793238462643383279502884197169399375105820974944592",
+//                "2718281828459045235360287471352662497757247093699959574966967627"));
+//    }
 
 }

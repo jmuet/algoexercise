@@ -27,4 +27,12 @@ public class UtilTest {
         assertArrayEquals(new int[]{-9,2,0}, Util.strToArray("-920"));
     }
 
+    @Test
+    public void getsClosestPowersOfTwo() {
+        assertEquals(1, Util.getClosestPowerOfTwo(1));
+        assertEquals(2, Util.getClosestPowerOfTwo(2));
+        assertEquals(4, Util.getClosestPowerOfTwo(3));
+        assertEquals(8, Util.getClosestPowerOfTwo(5));
+    }
+
 }
