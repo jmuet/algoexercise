@@ -1,5 +1,7 @@
 package com.jmuet.algo;
 
+import java.util.Arrays;
+
 public class GradeSchoolMath {
 
     public static String add(String x, String y) {
@@ -19,17 +21,15 @@ public class GradeSchoolMath {
         int sigy = signum(y);
         if (sigx * sigy < 0) {
             if (sigx < 0) {
-                invert(x);
-                return sub(y, x);
+                return sub(y, invert(x));
             } else {
-                invert(y);
-                return sub(x, y);
+                return sub(x, invert(y));
             }
         }
         int signum = signum(x);
         if (sigx < 0) {
-            invert(x);
-            invert(y);
+            x = invert(x);
+            y = invert(y);
         }
 
         int[] res = new int[maxlen];
@@ -69,8 +69,7 @@ public class GradeSchoolMath {
         System.arraycopy(x0,0,x,maxlen-x0.length,x0.length);
         System.arraycopy(y0,0,y,maxlen-y0.length,y0.length);
         if (signum(y) < 0) {
-            invert(y);
-            return add(x, y);
+            return add(x, invert(y));
         }
         int[] res = new int[maxlen];
 
@@ -139,12 +138,14 @@ public class GradeSchoolMath {
         return 0;
     }
 
-    private static void invert(int[] x) {
-        for (int i = 0 ; i < x.length; i++)
-            if (x[i] != 0) {
-                x[i] = -x[i];
-                return;
+    private static int[] invert(int[] arr) {
+        int[] res = Arrays.copyOf(arr, arr.length);
+        for (int i = 0 ; i < res.length; i++)
+            if (res[i] != 0) {
+                res[i] = -res[i];
+                return res;
             }
+        return res;
     }
 
 }
