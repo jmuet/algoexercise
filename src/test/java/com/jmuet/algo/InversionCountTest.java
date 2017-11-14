@@ -36,4 +36,13 @@ public class InversionCountTest {
         assertArrayEquals(new int[]{1,2,3,4,5,6,7,8}, InversionCount.sortAndCount(new int[]{1,3,2,5,4,6,7,8}).sorted);
     }
 
+    @Test
+    public void countsInversions_evenLengthArray_singleInversion() {
+        assertEquals(1, InversionCount.sortAndCount(new int[]{1,2,3,5,4,6}).inversionCount);
+    }
+
+    @Test
+    public void countsInversions_unEvenLengthArray_twoInversions() {
+        assertEquals(2, InversionCount.sortAndCount(new int[]{2,1,3,5,4}).inversionCount);
+    }
 }
