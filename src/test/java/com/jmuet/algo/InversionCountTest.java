@@ -17,8 +17,18 @@ public class InversionCountTest {
     }
 
     @Test
-    public void countsInversions_inArrayOfLength_ofPowerOfTwo() {
+    public void countsInversions_inArrayOfLength_ofPowerOfTwo_twoInversions() {
         assertEquals(2, InversionCount.sortAndCount(new int[]{1,3,2,5,4,6,7,8}).inversionCount);
+    }
+
+    @Test
+    public void countsInversions_inArrayOfLength_ofPowerOfTwo_singleInversion() {
+        assertEquals(1, InversionCount.sortAndCount(new int[]{1,2,3,5,4,6,7,8}).inversionCount);
+    }
+
+    @Test
+    public void countsInversions_inArrayOfLength_ofPowerOfTwo_reverseSorted() {
+        assertEquals(28, InversionCount.sortAndCount(new int[]{8,7,6,5,4,3,2,1}).inversionCount);  //8 choose 2 == 28
     }
 
     @Test
