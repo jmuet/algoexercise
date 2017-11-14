@@ -21,17 +21,11 @@ public class InversionCount {
         int i = 0, j = 0, splits = 0;
         for (int k = 0; k < res.length; k++) {
             if (i >= left.length) {
-                res[k] = right[j];
-                j = j + 1;
-            } else if (j >= right.length) {
-                res[k] = left[i];
-                i = i + 1;
-            } else if (left[i] < right[j]) {
-                res[k] = left[i];
-                i = i + 1;
+                res[k] = right[j++];
+            } else if (j >= right.length || left[i] < right[j]) {
+                res[k] = left[i++];
             } else {  //left[i] > right[j]
-                res[k] = right[j];
-                j = j + 1;
+                res[k] = right[j++];
                 splits += left.length - i;
             }
         }
