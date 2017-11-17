@@ -64,6 +64,6 @@ public class InversionCountTest {
             }
         }
 
-        assertEquals(1, InversionCount.sortAndCount(list.stream().mapToInt(i -> i).toArray()).inversionCount);
+        assertEquals(2407905288l, InversionCount.sortAndCount(list.stream().mapToInt(i -> i).toArray()).inversionCount);
     }
 }
