@@ -29,11 +29,6 @@ public class Karatsuba {
         int[] p = GradeSchoolMath.add(a, b);
         int[] q = GradeSchoolMath.add(c, d);
 
-//        if (p.length > len || q.length > len) { //there was a carry
-//            p = padLeft(p, 2 * len);
-//            q = padLeft(q, 2 * len);
-//        }
-
         int[] ac = multiplyRecursive(a, c);
         int[] bd = multiplyRecursive(b, d);
         int[] pq = multiplyRecursive(p, q);
@@ -46,12 +41,6 @@ public class Karatsuba {
     private static int[] padRight(int[] orig, int desiredLength) {
         int[] res = new int[desiredLength];
         System.arraycopy(orig, 0, res, 0, orig.length);
-        return res;
-    }
-
-    private static int[] padLeft(int[] orig, int desiredLength) {
-        int[] res = new int[desiredLength];
-        System.arraycopy(orig, 0, res, desiredLength - orig.length, orig.length);
         return res;
     }
 
