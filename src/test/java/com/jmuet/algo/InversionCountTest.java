@@ -2,6 +2,10 @@ package com.jmuet.algo;
 
 import org.junit.Test;
 
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Scanner;
+
 import static org.junit.Assert.*;
 
 public class InversionCountTest {
@@ -44,5 +48,22 @@ public class InversionCountTest {
     @Test
     public void countsInversions_unEvenLengthArray_twoInversions() {
         assertEquals(2, InversionCount.sortAndCount(new int[]{2,1,3,5,4}).inversionCount);
+    }
+
+    @Test
+    public void countsInversionsInLargeFile() throws IOException {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("IntegerArray100k.txt").getFile());
+
+        ArrayList<Integer> list = new ArrayList<>(100000);
+
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNext()) {
+                int line = scanner.nextInt();
+                list.add(line);
+            }
+        }
+
+        assertEquals(1, InversionCount.sortAndCount(list.stream().mapToInt(i -> i).toArray()).inversionCount);
     }
 }

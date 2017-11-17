@@ -34,9 +34,9 @@ public class InversionCount {
 
     public final static class CountResult {
         int[] sorted;
-        int inversionCount;
+        long inversionCount;
 
-        public CountResult(int[] sorted, int inversionCount) {
+        public CountResult(int[] sorted, long inversionCount) {
             this.sorted = sorted;
             this.inversionCount = inversionCount;
         }
