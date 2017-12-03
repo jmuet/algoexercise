@@ -2,6 +2,8 @@ package com.jmuet.algo;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
@@ -29,6 +31,19 @@ public class QuickSortTest {
         assertArrayEquals(expected, res.getResult());
         assertEquals(13, res.getComparisons());
         assertEquals(11, res.getCalls());
+    }
+
+    @Test
+    public void sortsArrayChoosingMedianPivot() {
+        int[] unsorted = new int[]{3,7,1,4,0,8,2};
+        int[] expected = new int[]{0,1,2,3,4,7,8};
+
+        QuickSort operation = QuickSort.withChoosingMedian(unsorted);
+        QuickSort.SortResult res = operation.sort();
+        System.out.println(Arrays.toString(res.getResult()));
+        assertArrayEquals(expected, res.getResult());
+        assertEquals(11, res.getComparisons());
+        assertEquals(9, res.getCalls());
     }
 
 }
