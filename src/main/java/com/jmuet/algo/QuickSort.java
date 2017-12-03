@@ -6,6 +6,7 @@ import java.util.function.BiFunction;
 public class QuickSort {
 
     private int comparisons;
+    private int calls;
     private int[] array;
     private BiFunction<Integer, Integer, Integer> choosePivotPosition;
 
@@ -14,6 +15,7 @@ public class QuickSort {
         this.array = Arrays.copyOf(array, array.length);
         this.choosePivotPosition = choosePivotPosition;
         this.comparisons = 0;
+        this.calls = 0;
     }
 
     public static QuickSort withChoosingFirst(int[] array) {
@@ -22,13 +24,20 @@ public class QuickSort {
         } );
     }
 
+    public static QuickSort withChoosingLast(int[] array) {
+        return new QuickSort(array, (start, end) -> {
+            return end - 1;
+        } );
+    }
+
     public static class SortResult {
         int[] result;
-        int comparisons;
+        int comparisons, calls;
 
-        public SortResult(int[] result, int comparisons) {
+        public SortResult(int[] result, int comparisons, int calls) {
             this.result = result;
             this.comparisons = comparisons;
+            this.calls = calls;
         }
 
         public int[] getResult() {
@@ -38,15 +47,20 @@ public class QuickSort {
         public int getComparisons() {
             return comparisons;
         }
+
+        public int getCalls() {
+            return calls;
+        }
     }
 
     public SortResult sort() {
         sort(0, array.length);
-        return new SortResult(array, comparisons);
+        return new SortResult(array, comparisons, calls);
     }
 
     //end is exclusive
     private void sort(int start, int end) {
+        calls++;
         int length = end - start;
         if (length <= 1)
             return;
