@@ -1,26 +1,63 @@
 package com.jmuet.algo;
 
+import java.util.Arrays;
+import java.util.function.BiFunction;
+
 public class QuickSort {
 
-    public static void sort(int [] array) {
-        sort(array, 0, array.length);
+    private int comparisons;
+    private int[] array;
+    private BiFunction<Integer, Integer, Integer> choosePivotPosition;
+
+
+    private QuickSort(int[] array, BiFunction<Integer, Integer, Integer> choosePivotPosition) {
+        this.array = Arrays.copyOf(array, array.length);
+        this.choosePivotPosition = choosePivotPosition;
+        this.comparisons = 0;
+    }
+
+    public static QuickSort withChoosingFirst(int[] array) {
+        return new QuickSort(array, (start, end) -> {
+            return start;
+        } );
+    }
+
+    public static class SortResult {
+        int[] result;
+        int comparisons;
+
+        public SortResult(int[] result, int comparisons) {
+            this.result = result;
+            this.comparisons = comparisons;
+        }
+
+        public int[] getResult() {
+            return result;
+        }
+
+        public int getComparisons() {
+            return comparisons;
+        }
+    }
+
+    public SortResult sort() {
+        sort(0, array.length);
+        return new SortResult(array, comparisons);
     }
 
     //end is exclusive
-    private static void sort(int[] array, int start, int end) {
-        if (end - start <= 1)
+    private void sort(int start, int end) {
+        int length = end - start;
+        if (length <= 1)
             return;
-        int pivotPosition = choosePivotPosition(start, end);
-        int pivotPositionAfterPartition = partition(array, start, end, pivotPosition);
-        sort(array, start, pivotPositionAfterPartition);
-        sort(array, pivotPositionAfterPartition + 1, end);
+        comparisons += length - 1;
+        int pivotPosition = choosePivotPosition.apply(start, end);
+        int pivotPositionAfterPartition = partition(start, end, pivotPosition);
+        sort(start, pivotPositionAfterPartition);
+        sort(pivotPositionAfterPartition + 1, end);
     }
 
-    private static int choosePivotPosition(int start, int end) {
-        return start;
-    }
-
-    private static int partition(int[] array, int start, int end, int pivotPosition) {
+    private int partition(int start, int end, int pivotPosition) {
         int pivot = array[pivotPosition];
         swap(array, start, pivotPosition);
         int i = start + 1;
