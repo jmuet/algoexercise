@@ -26,30 +26,14 @@ public class QuickSort {
 
     public static QuickSort withChoosingLast(int[] array) {
         return new QuickSort(array, (arr, range) -> {
-            return range.end - 1;
+            return range.end; //end inclusive
         } );
     }
 
     public static QuickSort withChoosingMedian(int[] array) {
-        return new QuickSort(array, (arr, range) -> {
-            int max = -1;
-            int maxPos = -1;
-            int secondMax = -1;
-            int secondMaxPos = -1;
-
-            int[] candidates = new int[]{range.start, range.end - 1, (range.end - range.start) / 2};
-            for (int candidate : candidates)
-                if (arr[candidate] >= max) {
-                    secondMax = max;
-                    secondMaxPos = maxPos;
-                    max = arr[candidate];
-                    maxPos = candidate;
-                } else if (arr[candidate] >= secondMax) {
-                    secondMax = arr[candidate];
-                    secondMaxPos = candidate;
-                }
-            return secondMaxPos;
-        } );
+        return new QuickSort(array, (arr, range) ->
+            MedianChooser.chooseMedianPosition(arr, range.start, range.end) //end inclusive
+        );
     }
 
     private static class Range {
@@ -96,12 +80,13 @@ public class QuickSort {
         if (length <= 1)
             return;
         comparisons += length - 1;
-        int pivotPosition = choosePivotPosition.apply(array, new Range(start, end));
+        int pivotPosition = choosePivotPosition.apply(array, new Range(start, end - 1)); //end inclusive
         int pivotPositionAfterPartition = partition(start, end, pivotPosition);
         sort(start, pivotPositionAfterPartition);
         sort(pivotPositionAfterPartition + 1, end);
     }
 
+    //end is exclusive
     private int partition(int start, int end, int pivotPosition) {
         int pivot = array[pivotPosition];
         swap(array, start, pivotPosition);
