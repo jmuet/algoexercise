@@ -4,41 +4,48 @@ import java.util.*;
 
 public class UndirectedGraph {
 
+    private ArrayList<Integer> vertices;
     private ArrayList<ArrayList<Integer>> adjacencyList;
-    private long edgesCount;
-    private int verticesCount;
+    private int edgesCount;
 
     private UndirectedGraph(ArrayList<ArrayList<Integer>> adjacencyList) {
         this.adjacencyList = adjacencyList;
-        edgesCount = this.adjacencyList.stream().flatMap(edges -> edges.stream()).count() / 2;
-        verticesCount = adjacencyList.size();
+        edgesCount = (int) (this.adjacencyList.stream().flatMap(edges -> edges.stream()).count() / 2);
+        vertices = new ArrayList<>();
+        for (int i = 0; i < adjacencyList.size(); i++)
+            vertices.add(i);
+    }
+
+    public List<Integer> getVertices() {
+        return new ArrayList<>(vertices);
     }
 
     public int getVerticesCount() {
-        return verticesCount;
+        return vertices.size();
     }
 
     /**
         @return edges of given vertex. No guarantees as of edges ordering.
      */
-    public Iterator<Integer> getVertex(int i) {
-        return adjacencyList.get(i).iterator();
+    public List<Integer> getEdges(int vertex) {
+        return Collections.unmodifiableList(adjacencyList.get(vertex));
     }
 
-    public long getEdgesCount() {
+    public int getEdgesCount() {
         return edgesCount;
     }
 
     /**
      * Merges target vertex pointed by chosen edge with the sourceVertex, effectively removing it from graph.
      * All edges pointing to that vertex will be redirected to sourceVertex.
-     * After this method completes, when invoking getVertex with target vertex index, empty list will be returned.
+     * After this method completes, when invoking getEdges with target vertex index, empty list will be returned.
      * @param sourceVertex
      * @param edgeIndex
      */
     public void contract(int sourceVertex, int edgeIndex) {
         ArrayList<Integer> sourceEdges = adjacencyList.get(sourceVertex);
         Integer targetVertex = sourceEdges.get(edgeIndex);
+//        System.out.println(sourceVertex+":"+edgeIndex+"->"+targetVertex);
         List<Integer> targetVertexEdges = adjacencyList.get(targetVertex);
         //rewiring edges targeting targetVertex to sourceVertex, will create loops in sourceVertex
         for (Integer vertexLinkedToTargetVertex : targetVertexEdges) {
@@ -53,7 +60,7 @@ public class UndirectedGraph {
         }
         //removing edges from targetVertex
         targetVertexEdges.clear();
-        verticesCount--;
+        vertices.remove(targetVertex);
         //removing loops in source
         removeLoops(sourceVertex);
     }
@@ -65,7 +72,7 @@ public class UndirectedGraph {
             if (edges.get(i) == vertex)
                 edgeIndexesForRemoval.add(i - edgeIndexesForRemoval.size()); //to make those indexes directly usable in removal scenario :P
         for (Integer i : edgeIndexesForRemoval)
-            edges.remove(i);
+            edges.remove((int)i); //gawd it caught me
         edgesCount -= edgeIndexesForRemoval.size();
     }
 
@@ -93,7 +100,7 @@ public class UndirectedGraph {
         private ArrayList<ArrayList<Integer>> adjacencyList;
 
         private GraphBuilder(boolean isInputNumberedFromZero) {
-            this.adjacencyList = new ArrayList<>();
+            this.adjacencyList = new ArrayList<>(); this.isInputNumberedFromZero = isInputNumberedFromZero;
         }
 
         public static GraphBuilder acceptingOneBasedVertices() {
@@ -101,6 +108,8 @@ public class UndirectedGraph {
         }
 
         public GraphBuilder addVertex(List<Integer> vertex) {
+            if (vertex.size() == 0)
+                throw new RuntimeException("illegal vertex without edges");
             ArrayList<Integer> v = new ArrayList<>();
             for (Integer edge : vertex) {
                 v.add(isInputNumberedFromZero ? edge : edge - 1);
@@ -110,6 +119,8 @@ public class UndirectedGraph {
         }
 
         public GraphBuilder addVertex(int[] vertex) {
+            if (vertex.length == 0)
+                throw new RuntimeException("illegal vertex without edges");
             ArrayList<Integer> v = new ArrayList<>();
             for (Integer edge : vertex) {
                 v.add(isInputNumberedFromZero ? edge : edge - 1);

@@ -31,7 +31,7 @@ public class UndirectedGraphTest {
                 .build();
         assertEquals(3, g.getVerticesCount());
         assertEquals(3, g.getEdgesCount());
-        Iterator<Integer> i = g.getVertex(0);
+        Iterator<Integer> i = g.getEdges(0).iterator();
             assertThat(i.next(), equalTo(1));
             assertThat(i.next(), equalTo(2));
     }
@@ -45,7 +45,7 @@ public class UndirectedGraphTest {
                 .build();
         assertEquals(3, g.getVerticesCount());
         assertEquals(3, g.getEdgesCount());
-        Iterator<Integer> i = g.getVertex(0);
+        Iterator<Integer> i = g.getEdges(0).iterator();
             assertThat(i.next(), equalTo(1));
             assertThat(i.next(), equalTo(2));
     }
@@ -59,10 +59,10 @@ public class UndirectedGraphTest {
                 .build();
         assertEquals(3, g.getVerticesCount());
         assertEquals(4, g.getEdgesCount());
-        Iterator<Integer> i = g.getVertex(0);
-        assertThat(i.next(), equalTo(1));
-        assertThat(i.next(), equalTo(2));
-        assertThat(i.next(), equalTo(2));
+        Iterator<Integer> i = g.getEdges(0).iterator();
+            assertThat(i.next(), equalTo(1));
+            assertThat(i.next(), equalTo(2));
+            assertThat(i.next(), equalTo(2));
     }
 
     @Test
@@ -76,6 +76,24 @@ public class UndirectedGraphTest {
         thrown.expect(RuntimeException.class);
         thrown.expectMessage("graph was already built");
         builder.build();
+    }
+
+    @Test
+    public void builderThrowsErrorWhenAddingEmptyVertex() {
+        thrown.expect(RuntimeException.class);
+        thrown.expectMessage("illegal vertex without edges");
+
+        UndirectedGraph.GraphBuilder.acceptingOneBasedVertices()
+                .addVertex(new ArrayList());
+    }
+
+    @Test
+    public void builderThrowsErrorWhenAddingEmptyVertex_fromArray() {
+        thrown.expect(RuntimeException.class);
+        thrown.expectMessage("illegal vertex without edges");
+
+        UndirectedGraph.GraphBuilder.acceptingOneBasedVertices()
+                .addVertex(new int[0]);
     }
 
     @Test
@@ -152,14 +170,18 @@ public class UndirectedGraphTest {
 
         assertEquals(2, g.getVerticesCount());
         assertEquals(2, g.getEdgesCount());
-        Iterator<Integer> i = g.getVertex(0);
+        Iterator<Integer> i = g.getEdges(0).iterator();
             assertThat(i.next(), equalTo(2));
             assertThat(i.next(), equalTo(2));
-        i = g.getVertex(1);
+        i = g.getEdges(1).iterator();
             assertThat(i.hasNext(), equalTo(false));
-        i = g.getVertex(2);
+        i = g.getEdges(2).iterator();
             assertThat(i.next(), equalTo(0));
             assertThat(i.next(), equalTo(0));
+
+        i = g.getVertices().iterator();
+            assertThat(i.next(), equalTo(0));
+            assertThat(i.next(), equalTo(2));
     }
 
     @Test
@@ -181,18 +203,68 @@ public class UndirectedGraphTest {
 
         assertEquals(3, g.getVerticesCount());
         assertEquals(4, g.getEdgesCount());
-        Iterator<Integer> i = g.getVertex(0);
+        Iterator<Integer> i = g.getEdges(0).iterator();
             assertThat(i.next(), equalTo(2));
             assertThat(i.next(), equalTo(2));
             assertThat(i.next(), equalTo(2));
-        i = g.getVertex(1);
+        i = g.getEdges(1).iterator();
             assertThat(i.hasNext(), equalTo(false));
-        i = g.getVertex(2);
+        i = g.getEdges(2).iterator();
             assertThat(i.next(), equalTo(0));
             assertThat(i.next(), equalTo(0));
             assertThat(i.next(), equalTo(0));
-        i = g.getVertex(3);
+        i = g.getEdges(3).iterator();
             assertThat(i.next(), equalTo(0));
+
+        i = g.getVertices().iterator();
+            assertThat(i.next(), equalTo(0));
+            assertThat(i.next(), equalTo(2));
+            assertThat(i.next(), equalTo(3));
+    }
+
+    @Test
+    public void graphContractsEdge2() {
+        UndirectedGraph g = UndirectedGraph.GraphBuilder.acceptingOneBasedVertices()
+                .addVertex(new int[]{2,2,3,3})
+                .addVertex(new int[]{1,1,3,4})
+                .addVertex(new int[]{1,1,2})
+                .addVertex(new int[]{2})
+                .build();
+        //0 === 1 --- 3
+        // \\ /
+        //   2
+
+        g.contract(0,3);
+        //0 === 1 --- 3
+        //  ---
+
+        assertEquals(3, g.getVerticesCount());
+        assertEquals(4, g.getEdgesCount());
+        Iterator<Integer> i = g.getEdges(0).iterator();
+        assertThat(i.next(), equalTo(1));
+        assertThat(i.next(), equalTo(1));
+        assertThat(i.next(), equalTo(1));
+        i = g.getEdges(1).iterator();
+        assertThat(i.next(), equalTo(0));
+        assertThat(i.next(), equalTo(0));
+        assertThat(i.next(), equalTo(0));
+        assertThat(i.next(), equalTo(3));
+        i = g.getEdges(2).iterator();
+        assertThat(i.hasNext(), equalTo(false));
+        i = g.getEdges(3).iterator();
+        assertThat(i.next(), equalTo(1));
+
+        i = g.getVertices().iterator();
+        assertThat(i.next(), equalTo(0));
+        assertThat(i.next(), equalTo(1));
+        assertThat(i.next(), equalTo(3));
+
+        g.contract(0,0);
+        //0 --- 3
+
+        assertEquals(2, g.getVerticesCount());
+        assertEquals(1, g.getEdgesCount());
+
     }
 
 }
