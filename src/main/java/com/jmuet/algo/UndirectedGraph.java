@@ -43,14 +43,7 @@ public class UndirectedGraph {
         //rewiring edges targeting targetVertex to sourceVertex, will create loops in sourceVertex
         for (Integer vertexLinkedToTargetVertex : targetVertexEdges) {
             List<Integer> linkedVertexEdges = adjacencyList.get(vertexLinkedToTargetVertex);
-            HashSet<Integer> edgeIndexesForUpdate = new HashSet<>();
-            for (int i = 0; i < linkedVertexEdges.size(); i++)
-                if (linkedVertexEdges.get(i) == targetVertex)
-                    edgeIndexesForUpdate.add(i);
-            for (Integer i : edgeIndexesForUpdate) {
-                linkedVertexEdges.add(i, sourceVertex);
-                linkedVertexEdges.remove(i + 1);
-            }
+            rewireEdges(linkedVertexEdges, targetVertex, sourceVertex);
         }
         //adding targetVertex edges to sourceVertex edges, except edges to sourceVertex to prevent additional loops
         for (Integer vertexLinkedToTargetVertex : targetVertexEdges) {
@@ -62,13 +55,35 @@ public class UndirectedGraph {
         targetVertexEdges.clear();
         verticesCount--;
         //removing loops in source
+        removeLoops(sourceVertex);
+    }
+
+    private void removeLoops(int vertex) {
+        List<Integer> edges = adjacencyList.get(vertex);
         ArrayList<Integer> edgeIndexesForRemoval = new ArrayList<>();
-        for (int i = 0; i < sourceEdges.size(); i++)
-            if (sourceEdges.get(i) == sourceVertex)
+        for (int i = 0; i < edges.size(); i++)
+            if (edges.get(i) == vertex)
                 edgeIndexesForRemoval.add(i - edgeIndexesForRemoval.size()); //to make those indexes directly usable in removal scenario :P
         for (Integer i : edgeIndexesForRemoval)
-            sourceEdges.remove(i);
+            edges.remove(i);
         edgesCount -= edgeIndexesForRemoval.size();
+    }
+
+    /**
+     * mutates edges, changing edges pointing to fromVertex to toVertex
+     * @param edges
+     * @param fromVertex
+     * @param toVertex
+     */
+    private void rewireEdges(List<Integer> edges, int fromVertex, int toVertex) {
+        HashSet<Integer> edgeIndexesForUpdate = new HashSet<>();
+        for (int i = 0; i < edges.size(); i++)
+            if (edges.get(i) == fromVertex)
+                edgeIndexesForUpdate.add(i);
+        for (Integer i : edgeIndexesForUpdate) {
+            edges.add(i, toVertex);
+            edges.remove(i + 1);
+        }
     }
 
     public static class GraphBuilder {
