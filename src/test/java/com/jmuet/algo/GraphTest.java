@@ -44,6 +44,16 @@ public class GraphTest {
     }
 
     @Test(expected = RuntimeException.class)
+    public void builderThrowsExceptionOnSecondBuildInvocation() {
+        Graph.GraphBuilder builder = Graph.GraphBuilder.acceptingOneBasedVertices()
+                .addVertex(new int[]{2,3})
+                .addVertex(new int[]{1})
+                .addVertex(new int[]{1,2});
+        builder.build();
+        builder.build();
+    }
+
+    @Test(expected = RuntimeException.class)
     public void builderThrowsErrorWhenBuildingMalformedGraph_edgeBelowZero() {
         Graph.GraphBuilder.acceptingOneBasedVertices()
                 .addVertex(new int[]{2, -2})
