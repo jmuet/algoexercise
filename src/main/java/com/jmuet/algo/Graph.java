@@ -7,9 +7,11 @@ import java.util.List;
 public class Graph {
 
     private ArrayList<ArrayList<Integer>> adjacencyList;
+    private long edgesCount;
 
     private Graph(ArrayList<ArrayList<Integer>> adjacencyList) {
         this.adjacencyList = adjacencyList;
+        edgesCount = this.adjacencyList.stream().flatMap(edges -> edges.stream()).count();
     }
 
     public int getVerticesCount() {
@@ -18,6 +20,10 @@ public class Graph {
 
     public Iterator<Integer> getVertex(int i) {
         return adjacencyList.get(i).iterator();
+    }
+
+    public long getEdgesCount() {
+        return edgesCount;
     }
 
     public static class GraphBuilder {
@@ -62,7 +68,7 @@ public class Graph {
         }
 
         private void validate() {
-            adjacencyList.stream().flatMap(integers -> integers.stream()).forEach(edge -> {
+            adjacencyList.stream().flatMap(edges -> edges.stream()).forEach(edge -> {
                 if (edge < 0)
                     throw new RuntimeException("malformed graph, negative edge");
                 if (edge >= adjacencyList.size())
