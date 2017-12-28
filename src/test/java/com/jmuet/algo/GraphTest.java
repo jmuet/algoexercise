@@ -30,4 +30,33 @@ public class GraphTest {
         assertThat(i.next(), equalTo(2));
     }
 
+    @Test
+    public void builderCreatesGraphFromArray() {
+        Graph g = Graph.GraphBuilder.acceptingOneBasedVertices()
+                .addVertex(new int[]{2,3})
+                .addVertex(new int[]{1})
+                .addVertex(new int[]{1,2})
+                .build();
+        assertEquals(3, g.getVerticesCount());
+        Iterator<Integer> i = g.getVertex(0);
+        assertThat(i.next(), equalTo(1));
+        assertThat(i.next(), equalTo(2));
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void builderThrowsErrorWhenBuildingMalformedGraph_edgeBelowZero() {
+        Graph.GraphBuilder.acceptingOneBasedVertices()
+                .addVertex(new int[]{2, -2})
+                .addVertex(new int[]{1})
+                .build();
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void builderThrowsErrorWhenBuildingMalformedGraph_edgeAboveSize() {
+        Graph.GraphBuilder.acceptingOneBasedVertices()
+                .addVertex(new int[]{2,30})
+                .addVertex(new int[]{1})
+                .build();
+    }
+
 }

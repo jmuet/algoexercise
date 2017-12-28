@@ -43,12 +43,31 @@ public class Graph {
             return this;
         }
 
+        public GraphBuilder addVertex(int[] vertex) {
+            ArrayList<Integer> v = new ArrayList<>();
+            for (Integer edge : vertex) {
+                v.add(isInputNumberedFromZero ? edge : edge - 1);
+            }
+            adjacencyList.add(v);
+            return this;
+        }
+
         public Graph build() {
             if (adjacencyList == null)
                 throw new RuntimeException("graph was already built");
+            validate();
             Graph res = new Graph(adjacencyList);
             adjacencyList = null;
             return res;
+        }
+
+        private void validate() {
+            adjacencyList.stream().flatMap(integers -> integers.stream()).forEach(edge -> {
+                if (edge < 0)
+                    throw new RuntimeException("malformed graph, negative edge");
+                if (edge >= adjacencyList.size())
+                    throw new RuntimeException("malformed graph, edge outside range");
+            });
         }
 
     }
