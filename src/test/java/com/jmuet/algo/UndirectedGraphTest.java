@@ -162,4 +162,37 @@ public class UndirectedGraphTest {
             assertThat(i.next(), equalTo(0));
     }
 
+    @Test
+    public void graphContractsEdge_preservingParallelEdges() {
+        UndirectedGraph g = UndirectedGraph.GraphBuilder.acceptingOneBasedVertices()
+                .addVertex(new int[]{2,2,3,3})
+                .addVertex(new int[]{1,1,3,4})
+                .addVertex(new int[]{1,1,2})
+                .addVertex(new int[]{2})
+                .build();
+        //0 === 1 --- 3
+        // \\ /
+        //   2
+
+        g.contract(0,0);
+        //0 --- 3
+        // \\\
+        //   2
+
+        assertEquals(3, g.getVerticesCount());
+        assertEquals(4, g.getEdgesCount());
+        Iterator<Integer> i = g.getVertex(0);
+            assertThat(i.next(), equalTo(2));
+            assertThat(i.next(), equalTo(2));
+            assertThat(i.next(), equalTo(2));
+        i = g.getVertex(1);
+            assertThat(i.hasNext(), equalTo(false));
+        i = g.getVertex(2);
+            assertThat(i.next(), equalTo(0));
+            assertThat(i.next(), equalTo(0));
+            assertThat(i.next(), equalTo(0));
+        i = g.getVertex(3);
+            assertThat(i.next(), equalTo(0));
+    }
+
 }
